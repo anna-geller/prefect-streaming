@@ -8,12 +8,20 @@ Resources:
     Properties:
       RepositoryName: !Ref RepositoryName
       LifecyclePolicy:
-        rules:
-          - rulePriority: 1
-            description: "Keep only one untagged image, expire all others"
-            selection:
-              tagStatus: untagged
-              countType: imageCountMoreThan
-              countNumber: 1
-            action:
-              type: expire
+        LifecyclePolicyText: >
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep only one untagged image, expire all others",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 1
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
