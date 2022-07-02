@@ -34,7 +34,7 @@ jobs:
           name: ${{ github.event.inputs.cloudformation-ecr-stack }}
           template: create_ecr_repository.yml
           parameter-overrides: "RepositoryName=${{ github.event.inputs.ecr-repository }}"
-          no-fail-on-empty-changeset: "1""
+          no-fail-on-empty-changeset: "1"
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
