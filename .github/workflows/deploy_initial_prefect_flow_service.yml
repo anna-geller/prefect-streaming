@@ -1,4 +1,4 @@
-name: Create ECS Cluster
+name: Deploy AWS ECS Service
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
         default: 'subnet-5c44cb03'
 jobs:
   deploy:
-    name: Redeploy Prefect Streaming Service to AWS
+    name: Initial Deploy of Prefect Streaming Service to AWS
     runs-on: ubuntu-latest
     environment: staging
 
