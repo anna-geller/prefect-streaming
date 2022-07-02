@@ -32,5 +32,5 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: Deploy AWS CloudFormation stack
-          template: create_prefect_ecs_service_cf.yaml
+          template: create_prefect_ecs_service.yml
           parameter-overrides: "SubnetID=${{ github.event.inputs.subnet }}"
