@@ -1,5 +1,4 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:338306982838:task-definition/crypto_prices_etl:1",
     "containerDefinitions": [
         {
             "name": "crypto_prices_etl",
@@ -50,52 +49,12 @@
     "taskRoleArn": "arn:aws:iam::338306982838:role/crypto_prices_etl_ecs_task_role",
     "executionRoleArn": "arn:aws:iam::338306982838:role/crypto_prices_etl_ecs_execution_role",
     "networkMode": "awsvpc",
-    "revision": 1,
     "volumes": [],
-    "status": "ACTIVE",
-    "requiresAttributes": [
-        {
-            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-        },
-        {
-            "name": "ecs.capability.execution-role-awslogs"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.ecr-auth"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.task-iam-role"
-        },
-        {
-            "name": "ecs.capability.execution-role-ecr-pull"
-        },
-        {
-            "name": "ecs.capability.secrets.ssm.environment-variables"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-        },
-        {
-            "name": "ecs.capability.task-eni"
-        }
-    ],
     "placementConstraints": [],
-    "compatibilities": [
-        "EC2",
-        "FARGATE"
-    ],
     "requiresCompatibilities": [
         "EC2",
         "FARGATE"
     ],
     "cpu": "256",
     "memory": "512",
-    "registeredAt": "2022-07-02T14:11:15.622000+02:00",
-    "registeredBy": "arn:aws:iam::338306982838:user/consoleUser"
 }

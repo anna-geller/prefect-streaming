@@ -37,7 +37,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: crypto_prices_etl
-  ECS_SERVICE: crypto_prices_etl
+  ECS_SERVICE: prefect-streaming/crypto_prices_etl_service
   ECS_CLUSTER: prefect-streaming
   ECS_TASK_DEFINITION: task-definition.json
   CONTAINER_NAME: crypto_prices_etl
