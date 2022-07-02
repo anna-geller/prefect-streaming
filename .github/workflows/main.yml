@@ -32,7 +32,7 @@ name: Real-Time Streaming Flows on ECS
 on:
   push:
     branches:
-      - $default-branch
+      - main
 
 env:
   AWS_REGION: us-east-1
