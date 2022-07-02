@@ -31,6 +31,6 @@ jobs:
       - name: Build ECR image and deploy ECS service
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: crypto_prices_etl
+          name: prefect-crypto-prices-etl
           template: create_prefect_ecs_service.yml
           parameter-overrides: "SubnetID=${{ github.event.inputs.subnet }}"
