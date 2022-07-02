@@ -1,3 +1,5 @@
+# Thanks to the Lifecycle Policy in the CloudFormation template the untagged images
+#  (except for the latest untagged version) will expire within 24 hours
 name: Create ECR repo, build and push the image
 on:
   workflow_dispatch:
