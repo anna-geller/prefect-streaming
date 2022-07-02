@@ -27,7 +27,7 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
-name: Real-Time Streaming Flows on ECS
+name: Streaming Flows on AWS ECS
 
 on:
   push:
@@ -35,12 +35,12 @@ on:
       - main
 
 env:
-  AWS_REGION: us-east-1
-  ECR_REPOSITORY: crypto_prices_etl
-  ECS_SERVICE: prefect-streaming/crypto_prices_etl_service
-  ECS_CLUSTER: prefect-streaming
-  ECS_TASK_DEFINITION: task-definition.json
-  CONTAINER_NAME: crypto_prices_etl
+  AWS_REGION: "us-east-1"
+  ECR_REPOSITORY: "crypto_prices_etl"
+  ECS_SERVICE: "prefect-streaming/crypto_prices_etl_service"
+  ECS_CLUSTER: "prefect-streaming"
+  ECS_TASK_DEFINITION: "task-definition.json"
+  CONTAINER_NAME: "crypto_prices_etl"
 
 permissions:
   contents: read
