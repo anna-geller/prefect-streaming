@@ -1,0 +1,101 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:338306982838:task-definition/crypto_prices_etl:1",
+    "containerDefinitions": [
+        {
+            "name": "crypto_prices_etl",
+            "image": "338306982838.dkr.ecr.us-east-1.amazonaws.com/crypto_prices_etl",
+            "cpu": 0,
+            "links": [],
+            "portMappings": [],
+            "essential": true,
+            "entryPoint": [],
+            "command": [],
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "secrets": [
+                {
+                    "name": "SLACK_WEBHOOK_URL",
+                    "valueFrom": "arn:aws:ssm:us-east-1:338306982838:parameter/SLACK_WEBHOOK_URL"
+                },
+                {
+                    "name": "PREFECT_API_URL",
+                    "valueFrom": "arn:aws:ssm:us-east-1:338306982838:parameter/PREFECT_API_URL"
+                },
+                {
+                    "name": "PREFECT_API_KEY",
+                    "valueFrom": "arn:aws:ssm:us-east-1:338306982838:parameter/PREFECT_API_KEY"
+                }
+            ],
+            "dnsServers": [],
+            "dnsSearchDomains": [],
+            "extraHosts": [],
+            "dockerSecurityOptions": [],
+            "dockerLabels": {},
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "crypto_prices_etl",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "crypto_prices_etl",
+    "taskRoleArn": "arn:aws:iam::338306982838:role/crypto_prices_etl_ecs_task_role",
+    "executionRoleArn": "arn:aws:iam::338306982838:role/crypto_prices_etl_ecs_execution_role",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "ecs.capability.secrets.ssm.environment-variables"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "registeredAt": "2022-07-02T14:11:15.622000+02:00",
+    "registeredBy": "arn:aws:iam::338306982838:user/consoleUser"
+}

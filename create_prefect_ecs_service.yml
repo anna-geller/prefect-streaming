@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  SubnetID:
+    Type: String
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: crypto_prices_etl
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: crypto_prices_etl_ecs_execution_role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AllowRetrievingSecretsFromParameterStore
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameters
+                Resource: "*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: crypto_prices_etl_ecs_task_role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AthenaS3DataLake
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - athena:*
+                  - glue:*
+                  - s3:*
+                Resource: "*"
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: crypto_prices_etl
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !Ref ExecutionRole
+      TaskRoleArn: !Ref TaskRole
+      ContainerDefinitions:
+        - Name: crypto_prices_etl
+          Image: 338306982838.dkr.ecr.us-east-1.amazonaws.com/crypto_prices_etl
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: ecs
+          Secrets:
+            - Name: SLACK_WEBHOOK_URL
+              ValueFrom: arn:aws:ssm:us-east-1:338306982838:parameter/SLACK_WEBHOOK_URL
+            - Name: PREFECT_API_URL
+              ValueFrom: arn:aws:ssm:us-east-1:338306982838:parameter/PREFECT_API_URL
+            - Name: PREFECT_API_KEY
+              ValueFrom: arn:aws:ssm:us-east-1:338306982838:parameter/PREFECT_API_KEY
+      RequiresCompatibilities:
+        - EC2
+        - FARGATE
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: crypto_prices_etl_service
+      Cluster: prefect-streaming
+      TaskDefinition: !Ref TaskDefinition
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref SubnetID

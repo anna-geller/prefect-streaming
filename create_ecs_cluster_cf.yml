@@ -1,0 +1,6 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: prefect-streaming
