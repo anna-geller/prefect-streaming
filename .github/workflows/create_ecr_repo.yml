@@ -1,7 +1,4 @@
-# https://github.com/kciter/aws-ecr-action
-
-name: Create ECR repo
-
+name: Create ECR repository
 on:
   workflow_dispatch:
     inputs:
@@ -14,18 +11,25 @@ on:
         required: true
         default: 'crypto-prices-etl'
 jobs:
-  build-and-push:
+  deploy:
+    name: Deploy ECS Fargate cluster
     runs-on: ubuntu-latest
+    environment: staging
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build image and push to ECR
-        uses: docker://ghcr.io/kciter/aws-ecr-action:latest
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          region: ${{ github.event.inputs.region}}
-          repo: ${{ github.event.inputs.ecr-repository}}
-          create_repo: true
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ github.event.inputs.region}}
+
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: prefect-ecr-repository
+          template: create_ecr_repository.yml
+          parameter-overrides: "RepositoryName=${{ github.event.inputs.ecr-repository }}"

@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  RepositoryName:
+    Type: String
+Resources:
+  MyRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Ref RepositoryName
