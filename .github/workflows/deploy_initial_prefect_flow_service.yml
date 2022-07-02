@@ -1,4 +1,4 @@
-name: Deploy AWS ECS Service
+name: Deploy Service to AWS ECS
 
 on:
   workflow_dispatch:
@@ -31,6 +31,6 @@ jobs:
       - name: Build ECR image and deploy ECS service
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: Deploy AWS CloudFormation stack
+          name: crypto_prices_etl
           template: create_prefect_ecs_service.yml
           parameter-overrides: "SubnetID=${{ github.event.inputs.subnet }}"
