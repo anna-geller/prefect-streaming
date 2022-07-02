@@ -33,4 +33,5 @@ jobs:
         with:
           name: prefect-crypto-prices-etl
           template: create_prefect_ecs_service.yml
+          capabilities: CAPABILITY_NAMED_IAM
           parameter-overrides: "SubnetID=${{ github.event.inputs.subnet }}"
