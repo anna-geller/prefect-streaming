@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create DynamoDB table with Price threshold for lookup in the real-time flow
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: crypto
+      ProvisionedThroughput:
+        ReadCapacityUnits: 3
+        WriteCapacityUnits: 3
+      AttributeDefinitions:
+        - AttributeName: coin
+          AttributeType: S
+      KeySchema:
+        - AttributeName: coin
+          KeyType: HASH
