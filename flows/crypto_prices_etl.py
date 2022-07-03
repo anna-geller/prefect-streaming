@@ -84,6 +84,8 @@ def crypto_prices_etl():
     else:
         logger.info("Current price (%d) is too high. Skipping alert", curr_price)
 
+    logger.info("🚀 Real-time streaming workflows made easy! 🎉️ 🥳 🚀")
+
 
 if __name__ == "__main__":
     while True:

@@ -1,5 +1,3 @@
-# https://github.com/aws-actions/aws-cloudformation-github-deploy/blob/master/action.yml
-# https://github.com/marketplace/actions/aws-cloudformation-deploy-cloudformation-stack-action-for-github-actions
 name: Deploy Service to AWS ECS
 
 on:
