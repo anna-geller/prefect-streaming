@@ -87,7 +87,7 @@ jobs:
         run: |
           aws ssm put-parameter --type SecureString --name PREFECT_API_URL --value ${{ secrets.PREFECT_API_URL}} --overwrite
           aws ssm put-parameter --type SecureString --name PREFECT_API_KEY --value ${{ secrets.PREFECT_API_KEY}} --overwrite
-          aws ssm put-parameter --type SecureString --name SLACK_WEBHOOK_URL --value ${{ secrets.SLACK_WEBHOOK_URL}} --overwrite
+        # aws ssm put-parameter --type SecureString --name SLACK_WEBHOOK_URL --value ${{ secrets.SLACK_WEBHOOK_URL}} --overwrite
 
       - name: Login to Amazon ECR
         id: login-ecr

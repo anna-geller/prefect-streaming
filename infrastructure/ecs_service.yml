@@ -157,8 +157,8 @@ Resources:
               ValueFrom: !Sub "arn:aws:ssm:${region}:${aws_account_id}:parameter/PREFECT_API_URL"
             - Name: PREFECT_API_KEY
               ValueFrom: !Sub "arn:aws:ssm:${region}:${aws_account_id}:parameter/PREFECT_API_KEY"
-            - Name: SLACK_WEBHOOK_URL
-              ValueFrom: !Sub "arn:aws:ssm:${region}:${aws_account_id}:parameter/SLACK_WEBHOOK_URL"
+#            - Name: SLACK_WEBHOOK_URL
+#              ValueFrom: !Sub "arn:aws:ssm:${region}:${aws_account_id}:parameter/SLACK_WEBHOOK_URL"
       RequiresCompatibilities:
         - FARGATE
 

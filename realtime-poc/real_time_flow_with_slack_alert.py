@@ -12,6 +12,10 @@ from prefect.task_runners import SequentialTaskRunner
 import requests
 from typing import Any, Dict
 
+import os
+from prefect_slack import SlackWebhook
+from prefect_slack.messages import send_incoming_webhook_message
+
 
 @task
 def extract_prices() -> Dict[str, Any]:
@@ -65,6 +69,11 @@ def real_time_flow():
     if curr_price < thresh_value:
         message = f"ALERT: Price ({curr_price}) is below threshold ({thresh_value})!"
         logger.info(message)
+        send_incoming_webhook_message(
+            slack_webhook=SlackWebhook(os.environ["SLACK_WEBHOOK_URL"]),
+            text=message,
+            wait_for=[raw_prices],
+        )
     else:
         logger.info("Current price (%d) is too high. Skipping alert", curr_price)
 
