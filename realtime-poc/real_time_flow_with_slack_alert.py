@@ -1,8 +1,3 @@
-"""
-If you run it locally with .env file, add:
-from dotenv import load_dotenv
-load_dotenv()
-"""
 import awswrangler as wr
 from datetime import datetime
 import pandas as pd
