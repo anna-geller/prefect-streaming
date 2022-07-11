@@ -24,7 +24,7 @@ jobs:
           echo "- **Changes**: detects changes in flow code and code dependencies as compared to the last commit" >> $GITHUB_STEP_SUMMARY
           echo "- **Build**: rebuilds Docker image and redeploys the service if any code dependencies changed </br>" >> $GITHUB_STEP_SUMMARY
           echo "Running in AWS_REGION ${{ env.AWS_REGION }} and Prefect workspace ${{ env.PREFECT_WORKSPACE }}" >> $GITHUB_STEP_SUMMARY
-          echo "Prefect agent gets deployed to AWS ECS Service ${{ env.ECS_CLUSTER }}/${{ env.PROJECT }} " >> $GITHUB_STEP_SUMMARY
+          echo "Prefect streaming service gets deployed to AWS ECS Service ${{ env.ECS_CLUSTER }}/${{ env.PROJECT }} " >> $GITHUB_STEP_SUMMARY
 
   changes:
     name: Detect code changes
@@ -43,47 +43,11 @@ jobs:
               - added|modified|deleted: 'realtime-poc/**'
               - added|modified|deleted: 'requirements.txt'
               - added|modified|deleted: 'Dockerfile'
+              - added|modified|deleted: 'task-definition.json'
       - name: Generate Markdown Summary
         run: | 
           echo "Changes as compared to the last commit" >> $GITHUB_STEP_SUMMARY
           echo ${{ steps.filter.outputs.code_files }} >> $GITHUB_STEP_SUMMARY
-  deploy:
-    needs: changes
-    if: ${{ needs.changes.outputs.prefect_flows_changed == 'true' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        flows: ${{ fromJson(needs.changes.outputs.prefect_flows) }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-
-      - name: Python dependencies
-        run: |
-          pip install .
-          pip install s3fs
-          pip install -U "prefect>=2.0b"
-
-      - name: Prefect Cloud login
-        run: prefect cloud login --key ${{ secrets.PREFECT_API_KEY}} --workspace ${{ env.PREFECT_WORKSPACE }}
-
-      - name: AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy flows to S3
-        run: prefect deployment create ${{ matrix.flows }}
-
-      - name: Flow deployments finished
-        run: echo "Flow deployments finished at $(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_STEP_SUMMARY
 
   ecr-ecs-build:
     needs: changes

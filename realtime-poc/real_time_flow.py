@@ -1,11 +1,12 @@
 import awswrangler as wr
 from datetime import datetime
 import pandas as pd
+import requests
+from typing import Any, Dict
+
 from prefect import task, flow, get_run_logger
 from prefect.blocks.system import String
 from prefect.task_runners import SequentialTaskRunner
-import requests
-from typing import Any, Dict
 
 
 @task

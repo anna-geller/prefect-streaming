@@ -27,12 +27,6 @@
     "taskRoleArn": "arn:aws:iam::338306982838:role/realtime-poc_ecs_task_role",
     "executionRoleArn": "arn:aws:iam::338306982838:role/realtime-poc_ecs_execution_role",
     "networkMode": "awsvpc",
-    "revision": 1,
-    "volumes": [],
-    "status": "ACTIVE",
-    "compatibilities": [
-        "FARGATE"
-    ],
     "requiresCompatibilities": [
         "FARGATE"
     ],
