@@ -1,17 +1,26 @@
-import boto3
-import os
-from prefect import task, flow, get_run_logger
-from datetime import datetime
-import requests
-import pandas as pd
+"""
+If you run it locally with .env file, add:
+from dotenv import load_dotenv
+load_dotenv()
+"""
 import awswrangler as wr
+from datetime import datetime
+import os
+import pandas as pd
+from prefect import task, flow, get_run_logger
+from prefect.blocks.system import String
+from prefect.task_runners import SequentialTaskRunner
 from prefect_slack import SlackWebhook
 from prefect_slack.messages import send_incoming_webhook_message
+import requests
 
 
 @task
 def extract_current_prices():
-    url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,REP,DASH&tsyms=USD"
+    url = (
+        "https://min-api.cryptocompare.com/data/pricemulti?"
+        "fsyms=BTC,ETH,REP,DASH&tsyms=USD"
+    )
     response = requests.get(url)
     prices = response.json()
     logger = get_run_logger()
@@ -44,42 +53,24 @@ def load_current_prices(df: pd.DataFrame):
     logger.info("Table %s in Athena data lake successfully updated 🚀", table_name)
 
 
-@task
-def get_price_threshold():
-    dynamodb = boto3.resource("dynamodb")
-    table = dynamodb.Table("crypto")
-    response = table.get_item(
-        Key={
-            "coin": "btc",
-        }
-    )
-    thresh_value = response["Item"]["threshold"]
-    logger = get_run_logger()
-    logger.info("Current BTC threshold: %s", thresh_value)
-    return float(thresh_value)
-
-
-@flow
-def crypto_prices_etl():
-    # Real-time ETL
+@flow(task_runner=SequentialTaskRunner())
+def real_time_flow():
+    # Real-time data pipeline
     raw_prices = extract_current_prices()
     transformed_data = transform_current_prices(raw_prices)
     load_current_prices(transformed_data)
+
     # Taking action in real-time
-    thresh_future = get_price_threshold()
-    thresh_value = thresh_future.result()
+    thresh_value = float(String.load("price").value)
     curr_price = raw_prices.result().get("BTC").get("USD")
     logger = get_run_logger()
     if curr_price < thresh_value:
-        logger.info(
-            "Price (%s) is below threshold (%d)! Sending alert!",
-            curr_price,
-            thresh_value,
-        )
+        message = f"ALERT: Price ({curr_price}) is below threshold ({thresh_value})!"
+        logger.info(message)
         send_incoming_webhook_message(
             slack_webhook=SlackWebhook(os.environ["SLACK_WEBHOOK_URL"]),
-            text=f"BTC price ({curr_price}) is lower than threshold ({thresh_value})!",
-            wait_for=[raw_prices, thresh_future],
+            text=message,
+            wait_for=[raw_prices],
         )
     else:
         logger.info("Current price (%d) is too high. Skipping alert", curr_price)
@@ -89,4 +80,4 @@ def crypto_prices_etl():
 
 if __name__ == "__main__":
     while True:
-        crypto_prices_etl()
+        real_time_flow()

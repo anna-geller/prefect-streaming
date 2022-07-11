@@ -1,5 +1,5 @@
-FROM prefecthq/prefect:2.0b7-python3.9
+FROM prefecthq/prefect:2.0b8-python3.9
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-COPY flows/ .
-CMD ["python", "crypto_prices_etl.py"]
+COPY realtime-poc/ .
+CMD ["python", "real_time_flow.py"]
