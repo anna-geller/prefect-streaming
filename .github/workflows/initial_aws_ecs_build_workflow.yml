@@ -112,7 +112,7 @@ jobs:
           name: ${{ github.event.inputs.project }}
           template: infrastructure/ecs_service.yml
           capabilities: CAPABILITY_NAMED_IAM
-          parameter-overrides: "cpu=${{ github.event.inputs.cpu }},memory=${{ github.event.inputs.memory }},project=${{ github.event.inputs.project }},cluster=${{ github.event.inputs.cluster }},image=${{ steps.build-image.outputs.image }},aws_account_id=${{ github.event.inputs.aws_account_id }},region=${{ github.event.inputs.region }}"
+          parameter-overrides: "cpu=${{ github.event.inputs.cpu }},memory=${{ github.event.inputs.memory }},project=${{ github.event.inputs.project }},cluster=${{ github.event.inputs.cluster }},image=${{ steps.build-image.outputs.image }},awsaccountid=${{ github.event.inputs.aws_account_id }},region=${{ github.event.inputs.region }}"
 
       - name: ECS Service Deployment finished
         run: echo "ECS Service Deployment finished at $(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_STEP_SUMMARY

@@ -13,7 +13,7 @@ Parameters:
     Type: String
     Description: ECS Cluster name
     Default: prefect-streaming
-  aws_account_id:
+  awsaccountid:
     Type: String
     Description: AWS Account ID
     Default: 338306982838
