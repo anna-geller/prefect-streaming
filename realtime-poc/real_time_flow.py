@@ -47,7 +47,7 @@ def load_prices(df: pd.DataFrame) -> None:
     logger.info("Table %s in Athena data lake successfully updated 🚀", table_name)
 
 
-@flow(task_runner=SequentialTaskRunner())
+@flow(task_runner=SequentialTaskRunner(), retries=5, retry_delay_seconds=5)
 def real_time_flow():
     # Real-time data pipeline
     raw_prices = extract_prices()

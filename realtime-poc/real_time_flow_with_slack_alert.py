@@ -67,7 +67,6 @@ def real_time_flow():
         send_incoming_webhook_message(
             slack_webhook=SlackWebhook(os.environ["SLACK_WEBHOOK_URL"]),
             text=message,
-            wait_for=[raw_prices],
         )
     else:
         logger.info("Current price (%d) is too high. Skipping alert", curr_price)
