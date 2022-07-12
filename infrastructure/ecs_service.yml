@@ -5,6 +5,16 @@ Description: >
   running a Prefect Streaming Service in a subnet created within that VPC
 
 Parameters:
+  cpu:
+    Type: String
+    Description: Allow Dynamic CPU configuration
+    Default: 512
+    AllowedValues: [256, 512, 1024, 2048, 4096]
+  memory:
+    Type: String
+    Description: Allow Increasing Memory - from 8192 on requires 4096 CPU and increases in 1024 increments
+    Default: 1024
+    AllowedValues: [512, 1024, 2048, 4096, 5120, 6144, 7168, 8192 , 9216, 10240]
   project:
     Type: String
     Description: Project name
@@ -21,16 +31,6 @@ Parameters:
     Type: String
     Description: AWS region name
     Default: us-east-1
-  cpu:
-    Type: String
-    Description: Allow Dynamic CPU configuration
-    Default: 512
-    AllowedValues: [256, 512, 1024, 2048, 4096]
-  memory:
-    Type: String
-    Description: Allow Increasing Memory - from 8192 on requires 4096 CPU and increases in 1024 increments
-    Default: 1024
-    AllowedValues: [512, 1024, 2048, 4096, 5120, 6144, 7168, 8192 , 9216, 10240]
   image:
     Type: String
     Description: Docker image for the service
