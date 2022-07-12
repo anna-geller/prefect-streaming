@@ -3,26 +3,6 @@ name: Deploy Prefect Streaming Service to AWS ECS
 on:
   workflow_dispatch:
     inputs:
-      workspace:
-        description: Prefect Cloud 2.0 workspace name
-        required: true
-        default: annaprefect/production
-      project:
-        description: Project name (ECS Service)
-        required: true
-        default: realtime-poc
-      cluster:
-        description: ECS Cluster name
-        required: true
-        default: prefect-streaming
-      aws_account_id:
-        description: AWS Account ID
-        required: true
-        default: '338306982838'
-      region:
-        description: AWS Region
-        required: true
-        default: us-east-1
       cpu:
         description: CPU for the agent
         required: true
@@ -37,7 +17,8 @@ on:
         options: ['512', '1024', '2048', '4096', '5120', '6144', '7168', '8192']
 
 env:
-  PROJECT: ${{ github.event.inputs.project }}
+  PROJECT: realtime-poc
+  ECS_CLUSTER: prefect-streaming
 
 jobs:
   ecr-repository:
@@ -55,14 +36,14 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ github.event.inputs.region}}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Create new ECR repository using AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: "${{ github.event.inputs.project }}-ecr"
+          name: "${{ env.PROJECT }}-ecr"
           template: infrastructure/ecr_repository.yml
-          parameter-overrides: "RepositoryName=${{ github.event.inputs.project }}"
+          parameter-overrides: "RepositoryName=${{ env.PROJECT }}"
           no-fail-on-empty-changeset: "1"
 
       - name: ECR repository built
@@ -81,7 +62,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ github.event.inputs.region}}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Add Secrets to SSM Parameter Store (needed for container in ECS task)
         run: |
@@ -109,16 +90,16 @@ jobs:
       - name: Deploy to ECS with AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: ${{ github.event.inputs.project }}
+          name: ${{ env.PROJECT }}
           template: infrastructure/ecs_service.yml
           capabilities: CAPABILITY_NAMED_IAM
-          parameter-overrides: "cpu=${{ github.event.inputs.cpu }},memory=${{ github.event.inputs.memory }},project=${{ github.event.inputs.project }},cluster=${{ github.event.inputs.cluster }},image=${{ steps.build-image.outputs.image }},awsaccountid=${{ github.event.inputs.aws_account_id }},region=${{ github.event.inputs.region }}"
+          parameter-overrides: "cpu=${{ github.event.inputs.cpu }},memory=${{ github.event.inputs.memory }},project=${{ env.PROJECT }},cluster=${{ env.ECS_CLUSTER }},image=${{ steps.build-image.outputs.image }},awsaccountid=${{ secrets.AWS_ACCOUNT_ID }},region=${{ secrets.AWS_DEFAULT_REGION }}"
 
       - name: ECS Service Deployment finished
         run: echo "ECS Service Deployment finished at $(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate task definition
-        run: aws ecs describe-task-definition --task-definition ${{ github.event.inputs.project }} --query taskDefinition > task-definition.json
+        run: aws ecs describe-task-definition --task-definition ${{ env.PROJECT }} --query taskDefinition > task-definition.json
 
       - name: Upload task definition as artifact
         uses: actions/upload-artifact@v3
