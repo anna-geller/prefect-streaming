@@ -2,11 +2,7 @@ name: Delete ECS Cluster, Prefect ECS Service and ECR repository
 
 on:
   workflow_dispatch:
-    inputs:
-      project:
-        description: Project name (ECS Service)
-        required: true
-        default: realtime-poc
+
 env:
   PROJECT: realtime-poc
 
