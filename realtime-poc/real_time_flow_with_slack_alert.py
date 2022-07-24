@@ -59,7 +59,7 @@ def real_time_flow():
 
     # Taking action in real-time
     thresh_value = float(String.load("price").value)
-    curr_price = raw_prices.result().get("BTC").get("USD")
+    curr_price = raw_prices.get("BTC").get("USD")
     logger = get_run_logger()
     if curr_price < thresh_value:
         message = f"ALERT: Price ({curr_price}) is below threshold ({thresh_value})!"
@@ -71,7 +71,7 @@ def real_time_flow():
     else:
         logger.info("Current price (%d) is too high. Skipping alert", curr_price)
 
-    logger.info("🚀 Real-time streaming workflows made easy! 🎉️ 🥳 🚀")
+    # logger.info("🚀 Real-time streaming workflows made easy! 🎉️ 🥳 🚀")
 
 
 if __name__ == "__main__":
